@@ -14,10 +14,15 @@
 - Improvement idea: Consider splitting functionality into separate classes or services. Each service for each functionality.
 
 ### Areas for Improvement
-- Implement debouncing to reduce the frequency of API calls when user inputs change.
+- Implement debouncing to reduce the frequency of API calls when user inputs change. I would consider moving the loan logic completely to the back-end. 
 
 ### Most Important Shortcoming
-- The primary issue was the incorrect display of the loan amount, it did not show the maximum available loan amount for the applicant. To fix it, I had to change the value of ```_loanAmountResult``` variable inside the else case, from ```_LoanAmount``` to ```tempAmount``` in api_service.dart file. 
+- The primary issue was the incorrect display of the loan amount, it did not show the maximum available loan amount for the applicant.  I changed the logic inside loan_form.dart file. Now it works as intended. 
+
+### Added feature
+
+- If the customer wanted to get loan but choose too short loan period, it suggests the new loan period to get the wanted amount of loan. This logic was added to loan_form.dart file.
+
 
 ### Conclusion
 Overall, the intern has shown a good understanding of Java and basic software design. But SOLID principles have to be implemented a little bit more efficiently. 

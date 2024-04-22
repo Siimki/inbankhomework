@@ -27,6 +27,8 @@ class _LoanFormState extends State<LoanForm> {
   int _loanAmountResult = 0;
   int _loanPeriodResult = 0;
   String _errorMessage = '';
+  int _suggestedPeriodForThatLoan = 0;
+  bool _suggestion = false;
 
   // Submit the form and update the state with the loan decision results.
   // Only submits if the form inputs are validated.
@@ -37,13 +39,21 @@ class _LoanFormState extends State<LoanForm> {
       setState(() {
         int tempAmount = int.parse(result['loanAmount'].toString());
         int tempPeriod = int.parse(result['loanPeriod'].toString());
-        if (tempAmount <= _loanAmount || tempPeriod > _loanPeriod  ) {
-          _loanAmountResult = int.parse(result['loanAmount'].toString());
-          _loanPeriodResult = int.parse(result['loanPeriod'].toString());
-        } else {
-          _loanAmountResult = tempAmount;
-          _loanPeriodResult = _loanPeriod;
-        }
+          int creditModifer = tempAmount ~/ tempPeriod;
+          int test = tempAmount ~/ 60;
+          if (tempAmount >= _loanAmount ) {
+            _loanAmountResult = tempAmount;
+            _loanPeriodResult = _loanPeriod;
+            _suggestion = false;
+          } else if (tempAmount <= _loanAmount && test < creditModifer){
+            _suggestedPeriodForThatLoan = _loanAmount ~/ creditModifer;
+            if (_suggestedPeriodForThatLoan < 60) {
+                _suggestion = true;
+            } else {
+                _suggestion = false;
+            }
+            print(_suggestedPeriodForThatLoan);
+          }
         _errorMessage = result['errorMessage'].toString();
       });
     } else {
@@ -178,6 +188,11 @@ class _LoanFormState extends State<LoanForm> {
               const SizedBox(height: 8.0),
               Text(
                   'Approved Loan Period: ${_loanPeriodResult != 0 ? _loanPeriodResult : "--"} months'),
+              const SizedBox(height: 8.0),
+              if(_suggestion)
+                Text(
+                    'Possible Loan period for your requested loan amount is: ${_suggestedPeriodForThatLoan} months'
+                ),
               Visibility(
                   visible: _errorMessage != '',
                   child: Text(_errorMessage, style: errorMedium))
